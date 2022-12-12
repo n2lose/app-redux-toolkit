@@ -6,7 +6,8 @@ export const prioritiesSelector = state => state.filters.priorities
 export const todoListSelector = state => state.todoList
 
 export const todoListRemainingSelector = createSelector(todoListSelector, searchTextSelector, statusSelector, prioritiesSelector, 
-    (todoList, searchText, status, priorities) => {
+    (todoList, searchText, status, priorities) => {  
+        console.log('priorities === ', priorities)
         return todoList.filter((todo) => {
             if(status === 'All') {
                 return priorities.length ? 
@@ -14,10 +15,9 @@ export const todoListRemainingSelector = createSelector(todoListSelector, search
                     todo.name.includes(searchText)
             }
 
-            return todo.name.includes(searchText && 
+            return todo.name.includes(searchText) && 
                 (status === 'Completed' ? todo.completed : !todo.completed) &&
-                (priorities.length ? priorities.includes(todo.priority) : true)   
-            )
+                (priorities.length ? priorities.includes(todo.priority) : true)               
         })
     }
 )

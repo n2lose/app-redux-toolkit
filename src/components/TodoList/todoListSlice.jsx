@@ -24,7 +24,7 @@ const initialTodoListstate = [{
     "id": '4f6572b2-b38e-5cb4-85be-395f35c54f4b',
     "name": "in lectus pellentesque at nulla suspendisse potenti cras",
     "priority": "Low",
-    "completed": false
+    "completed": true
 }]
 
 const reducers = {
@@ -33,8 +33,8 @@ const reducers = {
         state.push(action.payload)
     },
     toggleTodo: (state, action) => {
-        const currentTodo = state.find(todo => todo.id === action.payload ? todo : true)
-        if(currentTodo) currentTodo.completed = !currentTodo.completed
+        const currentIndex = state.findIndex(todo => todo.id === action.payload)        
+        if(currentIndex) state[currentIndex].completed = !state[currentIndex].completed
     },
     deleteTodo: (state, action) => {
         const index = state.findIndex(todo => todo.id === action.payload)

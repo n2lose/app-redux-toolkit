@@ -28,7 +28,7 @@ export default function TodoItem(props) {
     
     return (
         <Row style={{ marginBottom: '16px'}}>
-            <Col span={16} style={{textAlign: 'left', textTransform: 'capitalize'}}>
+            <Col span={16} style={{textAlign: 'left'}}>
                 <Checkbox style={checked ? 
                     { textDecorationLine: 'line-through', textDecorationStyle: 'solid', color: 'GrayText'}: {}}
                     checked={checked} onChange={handleToggleTodo}>
