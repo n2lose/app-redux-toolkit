@@ -21,6 +21,7 @@
     "@types/react-dom": "^18.0.8",
     "@vitejs/plugin-react": "^2.2.0",
     "antd": "^5.0.5",
+    "miragejs": "^0.1.46",
     "reselect": "^4.1.7",
     "uuid": "^9.0.0",
     "vite": "^3.2.3"

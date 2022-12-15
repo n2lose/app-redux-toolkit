@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {v4 as uuidv4 } from 'uuid'
 import { todoListRemainingSelector } from '../../redux-toolkit/selectors'
 import TodoItem from '../Todo'
-import todoListSlice from './todoListSlice'
+import todoListSlice, { addTodoThunk } from './todoListSlice'
 
 export default function TodoList() {
 
@@ -21,7 +21,8 @@ export default function TodoList() {
             priority: priority,
             completed: false
         }
-        dispatch(todoListSlice.actions.addTodo(todo))
+        // dispatch(todoListSlice.actions.addTodo(todo))
+        dispatch(addTodoThunk(todo))        
         setTodoName('')
     }
 

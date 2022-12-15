@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 
+
 const initialTodoListstate = [{
     "id": 'fb0c924d-2454-5454-ba66-7ae0d9a7ab38',
     "name": "sollicitudin ut suscipit a feugiat et eros",
@@ -41,9 +42,30 @@ const reducers = {
         if(index > -1) state.splice(index, 1)
     }
 }
-
-export default createSlice({
+ 
+const todoListSlice =  createSlice({
     name: 'todoList',
     initialState: initialTodoListstate,
     reducers: reducers
 })
+
+export default todoListSlice
+
+
+
+// action(object) and action creators ()=> { return action}
+// thunk action (function) and thunk action creators () => { return thunk action}
+
+export function addTodoThunk(todo) { // thunk function - thunk action
+  return function addTodoThunk(dispatch, getState) {
+    
+    console.log({todo})
+    console.log('add Todo Thunk: ', getState())
+    
+    // custom data before
+    todo.name = 'Learn Redux Thunk'
+    todo.priority = 'High'
+    dispatch(todoListSlice.actions.addTodo(todo))
+    console.log('addTodoThunk after ===== ', getState())
+  }
+}
