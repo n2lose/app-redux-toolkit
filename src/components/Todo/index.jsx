@@ -2,7 +2,7 @@ import { Button, Checkbox, Col, Row, Tag } from "antd"
 import { DeleteOutlined } from '@ant-design/icons'
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-import todoListSlice from "../TodoList/todoListSlice"
+import todoListSlice, { updateTodo } from "../TodoList/todoListSlice"
 
 const priorityColorMap = {
     High: 'red',
@@ -19,7 +19,8 @@ export default function TodoItem(props) {
 
     const handleToggleTodo = ()=> {
         setChecked(!checked)
-        dispatch(todoListSlice.actions.toggleTodo(id))
+        // dispatch(todoListSlice.actions.toggleTodo(id))
+        dispatch(updateTodo(id))
     }
 
     const handleDeleteTodo = ()=> {

@@ -4,6 +4,8 @@ import Filters from './components/Filters'
 import TodoList from './components/TodoList'
 import { setupServer } from './APIs'
 import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { fetchTodos } from './components/TodoList/todoListSlice'
 
 const { Title } = Typography
 
@@ -12,40 +14,46 @@ if(process.env.NODE_ENV === 'development') {
 }
 
 function App() {
-  useEffect(()=> {
-    fetch('/api/addTodo', {
-      method: 'POST',
-      body: JSON.stringify({
-        id: 1,
-        name: "Learn Javascript",
-        priority: "Medium",
-        completed: false
-      })
-    })
-      .then(res => {
-        // fetch todos after added
-        fetch('/api/todos')
-        .then(res => res.json())
-        .then(data => console.log('Added first todo : ', data))
+  // useEffect(()=> {
+  //   fetch('/api/addTodo', {
+  //     method: 'POST',
+  //     body: JSON.stringify({
+  //       id: 1,
+  //       name: "Learn Javascript",
+  //       priority: "Medium",
+  //       completed: false
+  //     })
+  //   })
+  //     .then(res => {
+  //       // fetch todos after added
+  //       fetch('/api/todos')
+  //       .then(res => res.json())
+  //       .then(data => console.log('Added first todo : ', data))
 
-        // update todo
-        fetch('api/updateTodo', {
-          method: 'POST',
-          body: JSON.stringify({
-            id: 1,
-            name: "Learn Redux thunk",
-            priority: "High",
-            completed: true
-          })
-        })
-          .then(() => {
-            fetch('/api/todos')
-              .then(res => res.json())
-              .then(data => console.log('Updated todo : ', data))
-          })
-      })
+  //       // update todo
+  //       fetch('api/updateTodo', {
+  //         method: 'POST',
+  //         body: JSON.stringify({
+  //           id: 1,
+  //           name: "Learn Redux thunk",
+  //           priority: "High",
+  //           completed: true
+  //         })
+  //       })
+  //         .then(() => {
+  //           fetch('/api/todos')
+  //             .then(res => res.json())
+  //             .then(data => console.log('Updated todo : ', data))
+  //         })
+  //     })
 
    
+  // }, [])
+
+  const dispatch = useDispatch()
+
+  useEffect(()=> {
+    dispatch(fetchTodos())
   }, [])
 
   return (

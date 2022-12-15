@@ -1,33 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 
-const initialTodoListstate = [{
-    "id": 'fb0c924d-2454-5454-ba66-7ae0d9a7ab38',
-    "name": "sollicitudin ut suscipit a feugiat et eros",
-    "priority": "Medium",
-    "completed": false
-  }, {
-    "id": '57ce9cb7-ab3d-58cf-a926-f670bddc8e3b',
-    "name": "pede ullamcorper augue a suscipit nulla",
-    "priority": "High",
-    "completed": false
-  }, {
-    "id": '0d557645-cef5-5f0e-b6da-e7b881427a37',
-    "name": "metus sapien ut nunc vestibulum",
-    "priority": "Low",
-    "completed": false
-  }, {
-    "id": '9934b332-8287-5d7a-a855-b5546dfd643d',
-    "name": "sit amet diam in magna",
-    "priority": "Medium",
-    "completed": false
-  }, {
-    "id": '4f6572b2-b38e-5cb4-85be-395f35c54f4b',
-    "name": "in lectus pellentesque at nulla suspendisse potenti cras",
-    "priority": "Low",
-    "completed": true
-}]
-
+const initialTodoListstate = {
+  status: 'Idle',
+  todos: []
+}
 const reducers = {
     addTodo: (state, action) => {
         // Normally we should push or assign direct into mutable state, but redux-toolkit allow we can do it
@@ -46,26 +23,76 @@ const reducers = {
 const todoListSlice =  createSlice({
     name: 'todoList',
     initialState: initialTodoListstate,
-    reducers: reducers
+    reducers: reducers,
+    extraReducers: builder => {
+      builder.addCase(fetchTodos.pending, (state, action) => {
+        state.status = 'loading'
+      }).addCase(fetchTodos.fulfilled, (state, action) => {
+        state.status = 'Idle'
+        state.todos = action.payload
+      }).addCase(addNewTodo.fulfilled, (state, action) => {
+        state.status = 'Idle'
+        state.todos.push(action.payload)
+      }).addCase(updateTodo.fulfilled, (state, action) => {
+        state.status = 'Idle'
+        let currentTodo = state.todos.find(todo => todo.id === action.payload)        
+        currentTodo = action.payload
+      }).addCase(deleteTodo.fulfilled, (state, action) => {
+        state.status = 'Idle'
+        let currentIndex = state.todos.findIndex(todo => todo.id === action.payload)
+        console.log('currentIndex === ', currentIndex)
+      })
+    }
 })
+
+export const fetchTodos = createAsyncThunk('todos/fetchTodos', async ()=> {
+  const res = await fetch('/api/todos')
+  const data = await res.json()
+  return data.todos
+})
+
+export const addNewTodo = createAsyncThunk('todos/addnewTodo', async (newTodo)=> {
+  const res = await fetch('/api/addTodo', {
+    method: 'POST',
+    body: JSON.stringify(newTodo)
+  })
+  const data = await res.json()  
+  return data.todos
+})
+
+export const updateTodo = createAsyncThunk('todos/updateTodo', async (id)=> {
+  const res = await fetch('/api/updateTodo', {
+    method: 'POST',
+    body: JSON.stringify(id)
+  })
+  const data = await res.json()  
+  console.log({data})
+  return data.todos
+})
+
+export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id) => {
+  const res = await fetch('/api/deleteTodo', {
+    method: 'DELETE',
+    body: JSON.stringify(id)
+  })
+
+  const data = await res.json()
+  console.log({data})
+  return data.todos
+})
+
+// export const updateTodo = createAsyncThunk('todos/updateTodo', async (id)=> {
+//   const res = await fetch('/api/updateTodo', {
+//     method: 'POST',
+//     body: JSON.stringify(id)
+//   })
+//   const data = await res.json()
+//   return data.todos
+// })
+
+// todos/fetchTodos === pending
+// todos/fetchTodos === fullfilled
+// todos/fetchTodos === rejected
 
 export default todoListSlice
 
-
-
-// action(object) and action creators ()=> { return action}
-// thunk action (function) and thunk action creators () => { return thunk action}
-
-export function addTodoThunk(todo) { // thunk function - thunk action
-  return function addTodoThunk(dispatch, getState) {
-    
-    console.log({todo})
-    console.log('add Todo Thunk: ', getState())
-    
-    // custom data before
-    todo.name = 'Learn Redux Thunk'
-    todo.priority = 'High'
-    dispatch(todoListSlice.actions.addTodo(todo))
-    console.log('addTodoThunk after ===== ', getState())
-  }
-}

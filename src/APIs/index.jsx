@@ -22,9 +22,10 @@ export const setupServer = ()=> {
     
             // Update status of Todo Item
             this.post('/updateTodo', (schema, request) => {
-                let payload = JSON.parse(request.requestBody)
-                const currentTodo = schema.todos.find(payload.id)            
-                currentTodo.update(payload)            
+                let id = JSON.parse(request.requestBody)
+                const currentTodo = schema.todos.find(id)            
+                currentTodo.update({completed: !currentTodo.completed})     
+                return currentTodo       
             })
     
              // Using the `Response` class to return a 500
